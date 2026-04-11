@@ -1,0 +1,207 @@
+/* ===== Gold Finance Dashboard - Cleaned & Polished ===== */
+:root{
+  --bg-start:#020617;
+  --bg-end:#0b1220;
+  --card-bg:rgba(15,23,42,0.9);
+  --card-border:rgba(148,163,184,0.25);
+  --accent:#fbbf24;         /* gold */
+  --accent-soft:rgba(251,191,36,0.12);
+  --accent-strong:#f59e0b;
+  --text-main:#e2e8f0;
+  --text-muted:#94a3b8;
+  --input-bg:rgba(15,23,42,0.85);
+}
+
+/* ---------- Page ----------
+   Global background, font stack, and container width
+--------------------------------*/
+body{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: radial-gradient(circle at top, var(--bg-start), var(--bg-end) 55%);
+  color:var(--text-main);
+  margin:0;
+  padding-bottom:40px;
+}
+
+.container{ max-width:980px; }
+
+/* ---------- Navbar ----------
+--------------------------------*/
+.navbar{
+  background: rgba(15,23,42,0.95) !important;
+  border-bottom: 1px solid rgba(148,163,184,0.35);
+  backdrop-filter: blur(8px);
+}
+.navbar-brand{ font-weight:600; letter-spacing:0.02em; }
+
+/* ---------- Cards ----------
+   Visible by default (avoids JS dependency for visibility)
+--------------------------------*/
+.card{
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:14px;
+  box-shadow:0 14px 40px rgba(0,0,0,0.55);
+  backdrop-filter: blur(12px);
+  opacity:1; transform:none;
+  transition: opacity .35s ease, transform .35s ease, box-shadow .2s ease;
+}
+.card.visible{ opacity:1; transform:none; }
+.card:hover{ box-shadow:0 18px 45px rgba(0,0,0,0.7); }
+
+.card-header{
+  background: linear-gradient(90deg, rgba(15,23,42,0.92), rgba(15,23,42,0.45));
+  border-bottom:1px solid rgba(148,163,184,0.35);
+}
+.card-header h4{ margin:0; color:#f9fafb; }
+
+/* ---------- Typography ----------
+--------------------------------*/
+h1,h2{ color:#f9fafb; }
+.text-muted{ color:var(--text-muted) !important; }
+
+/* ---------- Forms ----------
+--------------------------------*/
+label{ color:#cbd5e1; font-weight:600; font-size:0.92rem; }
+
+.form-control{
+  background:var(--input-bg);
+  border:1px solid rgba(148,163,184,0.45);
+  color:var(--text-main);
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:0.95rem;
+}
+.form-control::placeholder{ color:rgba(148,163,184,0.6); }
+.form-control:focus{
+  background:var(--input-bg);
+  border-color:var(--accent-strong);
+  box-shadow:0 0 0 1px var(--accent-strong), 0 0 12px rgba(245,158,11,0.45);
+  color:#f9fafb;
+}
+.form-text{ color:var(--text-muted); font-size:0.8rem; }
+
+/* ---------- Buttons ----------
+--------------------------------*/
+.btn-primary{
+  background: linear-gradient(90deg, var(--accent-strong), var(--accent));
+  border:none;
+  padding:10px 18px;
+  font-size:16px;
+  border-radius:999px;
+  box-shadow:0 6px 18px rgba(245,158,11,0.45);
+  font-weight:600;
+}
+.btn-primary:hover{
+  background: linear-gradient(90deg, #ea580c, var(--accent-strong));
+  box-shadow:0 8px 22px rgba(245,158,11,0.7);
+}
+.btn-secondary{
+  background: rgba(15,23,42,0.9);
+  border:1px solid rgba(148,163,184,0.55);
+  color:var(--text-main);
+  border-radius:999px;
+  padding:8px 16px;
+}
+.btn-secondary:hover{ background: rgba(15,23,42,0.75); }
+
+.btn[disabled]{ opacity:0.75; cursor:not-allowed; }
+
+/* ---------- Tables ----------
+   No shaking: DO NOT change font-weight or padding on hover.
+--------------------------------*/
+.table{
+  color:#e5e7eb;
+  margin-bottom:0;
+  border-collapse:separate;
+}
+
+/* header */
+.table thead th{
+  background: rgba(15,23,42,0.95);
+  border-bottom:1px solid rgba(148,163,184,0.45);
+  font-weight:600; font-size:0.85rem;
+  text-transform:uppercase; letter-spacing:0.04em;
+  padding:18px 12px;
+}
+
+/* cells */
+.table td{
+  border-top:1px solid rgba(148,163,184,0.12); /* muted separator */
+  font-size:0.95rem;
+  padding:14px 12px;
+  vertical-align:middle;
+  color:inherit;         /* inherit base color */
+  font-weight:400;       /* stable default */
+  line-height:1.25;
+}
+
+/* smooth color transitions only (no layout shift) */
+.table tbody tr{
+  transition: background-color .18s ease, color .18s ease;
+}
+
+/* hover: only change background and text color -- keep weight/padding the same */
+.table tbody tr:hover{
+  background: rgba(251,191,36,0.08) !important; /* soft gold tint */
+}
+.table tbody tr:hover td{
+  color:#ffffff !important;
+  /* do NOT change font-weight or padding here to avoid shaking */
+  font-weight: inherit !important;
+}
+
+/* optional: subtle left accent on hover without layout shift */
+.table tbody tr:hover td:first-child{
+  box-shadow: inset 6px 0 0 rgba(251,191,36,0.10);
+}
+
+/* scrollbar styling for responsive tables */
+.table-responsive{ scrollbar-width:thin; }
+.table-responsive::-webkit-scrollbar{ height:6px; width:6px; }
+.table-responsive::-webkit-scrollbar-thumb{ background:rgba(148,163,184,0.6); border-radius:999px; }
+
+/* ---------- Cursor / Tooltips ----------
+   Keep default cursor (no question-mark)
+--------------------------------*/
+label[title], th[title], td[title]{ cursor: default; }
+
+/* ---------- Micro-UX: animations & spinner ----------
+--------------------------------*/
+@keyframes pulse-gold{
+  0%{ transform:scale(1); opacity:1; }
+  50%{ transform:scale(1.03); opacity:0.96; }
+  100%{ transform:scale(1); opacity:1; }
+}
+.display-4.pulse{
+  animation:pulse-gold 1.2s ease-in-out infinite;
+  transform-origin:center;
+  text-shadow:0 0 18px rgba(251,191,36,0.6);
+}
+
+/* spinner for submit button */
+.btn .spinner{
+  display:inline-block; width:18px; height:18px;
+  border:2px solid rgba(255,255,255,0.2);
+  border-top-color:rgba(255,255,255,0.9);
+  border-radius:50%;
+  margin-left:10px; vertical-align:middle;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* small highlight block for success messages */
+.prediction-success{
+  border-left:4px solid var(--accent);
+  padding-left:12px;
+  background:var(--accent-soft);
+  border-radius:8px;
+  margin-bottom:1rem;
+}
+
+/* ---------- Responsive tweaks ----------
+--------------------------------*/
+@media (max-width:576px){
+  .container{ padding:0 14px; }
+  .btn-primary, .btn-secondary{ width:100%; }
+}

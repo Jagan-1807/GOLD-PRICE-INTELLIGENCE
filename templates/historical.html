@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Aura: Historical Data</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0b0c10;
+      --card-bg: rgba(31, 40, 51, 0.65);
+      --accent-color: #66fcf1;
+      --accent-hover: #45a29e;
+      --text-main: #c5c6c7;
+      --text-highlight: #ffffff;
+      --border-color: rgba(102, 252, 241, 0.25);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Animated Background */
+    .bg-animation {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1;
+      background: radial-gradient(circle at center, #111418 0%, #050608 100%);
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(102, 252, 241, 0.12);
+      filter: blur(90px);
+      animation: drift 20s infinite alternate cubic-bezier(0.5, 0, 0.5, 1);
+    }
+    .orb1 { width: 400px; height: 400px; top: 10%; right: -100px; }
+    .orb2 { width: 300px; height: 300px; bottom: 10%; left: -50px; animation-duration: 25s; animation-direction: alternate-reverse; background: rgba(69, 162, 158, 0.15); }
+    
+    @keyframes drift {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-100px, 100px) scale(1.15); }
+    }
+
+    /* Navbar */
+    nav {
+      padding: 20px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(11, 12, 16, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--accent-color);
+      letter-spacing: 3px;
+      text-decoration: none;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(102, 252, 241, 0.4);
+      transition: text-shadow 0.3s ease;
+    }
+    .logo:hover {
+      text-shadow: 0 0 20px rgba(102, 252, 241, 0.8);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 50px 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Glassmorphism Card */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 40px;
+      width: 100%;
+      box-shadow: 0 15px 35px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      margin-bottom: 50px;
+    }
+    
+    .card-header {
+      margin-bottom: 30px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .card-header h2 {
+      font-size: 2.2rem;
+      color: var(--text-highlight);
+      font-weight: 600;
+    }
+    .card-header span {
+      font-size: 1rem;
+      color: var(--accent-color);
+      opacity: 0.9;
+    }
+
+    /* Secondary Buttons */
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-highlight);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Table Styles */
+    .table-container {
+      overflow-x: auto;
+      overflow-y: auto;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      max-height: 600px;
+      position: relative;
+    }
+    
+    /* Custom Scrollbar for table */
+    .table-container::-webkit-scrollbar { width: 10px; height: 10px; }
+    .table-container::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
+    .table-container::-webkit-scrollbar-thumb { background: rgba(102, 252, 241, 0.4); border-radius: 10px; }
+    .table-container::-webkit-scrollbar-thumb:hover { background: rgba(102, 252, 241, 0.7); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    th, td {
+      padding: 16px 20px;
+    }
+    th {
+      color: var(--accent-color);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      background: rgba(11, 12, 16, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 2px solid rgba(102, 252, 241, 0.3);
+      backdrop-filter: blur(5px);
+    }
+    td {
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      transition: background 0.2s, color 0.2s;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:hover td {
+      background: rgba(102, 252, 241, 0.08);
+      color: #fff;
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-animation">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+  </div>
+
+  <nav>
+    <a href="/" class="logo">Aura</a>
+    <a href="/" class="btn-secondary">&larr; Back to Forecast</a>
+  </nav>
+
+  <div class="container">
+    <div class="glass-card">
+      <div class="card-header">
+        <div>
+          <h2>Full Historical Dataset</h2>
+          <span>Complete market indicator logs used for model training (2008 - 2026)</span>
+        </div>
+      </div>
+      
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              {% for col in columns %}
+              <th>{{ col }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in historical_data %}
+            <tr>
+              {% for col in columns %}
+              <td>{{ row[col] }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
