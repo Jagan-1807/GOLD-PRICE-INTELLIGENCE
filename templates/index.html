@@ -5,6 +5,8 @@
   <title>Aura: Gold Price Prediction</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- AOS CSS for Scroll Effects -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -108,12 +110,25 @@
       border: 1px solid var(--border-color); border-radius: 20px;
       padding: 40px; width: 100%;
       box-shadow: 0 15px 35px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      margin-bottom: 40px; animation: scaleUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      margin-bottom: 40px; 
+      /* removed scaleUp animation here so AOS handles it instead */
+      transition: box-shadow 0.4s ease, transform 0.4s ease;
     }
     .glass-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 20px 45px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 25px rgba(102, 252, 241, 0.05);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 30px rgba(102, 252, 241, 0.15);
+    }
+    
+    /* 3D Elements Inside Card */
+    .card-header {
+      margin-bottom: 35px; border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 20px; position: relative;
+    }
+    .grid-2 {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-bottom: 20px;
+    }
+    .btn-glow {
+      transform: translateZ(40px);
     }
     
     .card-header {
@@ -248,7 +263,7 @@
   </nav>
 
   <div class="container">
-    <div class="hero">
+    <div class="hero" data-aos="fade-down" data-aos-duration="1000">
       <h1>Gold Price Intelligence</h1>
       <p class="tagline">Precision forecasting powered by advanced machine learning. Navigate market trends effortlessly.</p>
       <div class="dataset-info">Trained on Real Market Data: 2008 – 2026</div>
@@ -256,7 +271,7 @@
 
     {% if model_loaded %}
     <!-- Prediction Form -->
-    <div class="glass-card" style="animation-delay: 0.1s;">
+    <div class="glass-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
       <div class="card-header">
         <h2>Initiate Forecast</h2>
         <span>Tune the market indicators to calculate projected gold price</span>
@@ -268,37 +283,37 @@
           <!-- SPX Input -->
           <div class="input-wrapper">
             <div class="input-row">
-              <label for="spx">SPX <span>(S&P 500)</span></label>
-              <input type="number" step="any" class="glass-input" id="spx" name="spx" value="4500.0" required>
+              <label for="spx">SPX % Change Today <span>(S&P 500)</span></label>
+              <input type="number" step="0.01" class="glass-input" id="spx" name="spx" placeholder="e.g. 1.25" value="0.50" required>
             </div>
-            <input type="range" id="spx_slider" min="600" max="7000" step="10" value="4500">
+            <input type="range" id="spx_slider" min="-10" max="10" step="0.01" value="0.50">
           </div>
           
           <!-- USO Input -->
           <div class="input-wrapper">
             <div class="input-row">
-              <label for="uso">USO <span>(Crude Oil ETF)</span></label>
-              <input type="number" step="any" class="glass-input" id="uso" name="uso" value="70.5" required>
+              <label for="uso">USO % Change Today <span>(Crude Oil ETF)</span></label>
+              <input type="number" step="0.01" class="glass-input" id="uso" name="uso" placeholder="e.g. -0.50" value="0.20" required>
             </div>
-            <input type="range" id="uso_slider" min="15" max="950" step="1" value="70.5">
+            <input type="range" id="uso_slider" min="-10" max="10" step="0.01" value="0.20">
           </div>
           
           <!-- SLV Input -->
           <div class="input-wrapper">
             <div class="input-row">
-              <label for="slv">SLV <span>(Silver ETF)</span></label>
-              <input type="number" step="any" class="glass-input" id="slv" name="slv" value="23.5" required>
+              <label for="slv">SLV % Change Today <span>(Silver ETF)</span></label>
+              <input type="number" step="0.01" class="glass-input" id="slv" name="slv" placeholder="e.g. 2.10" value="0.80" required>
             </div>
-            <input type="range" id="slv_slider" min="8" max="110" step="0.5" value="23.5">
+            <input type="range" id="slv_slider" min="-10" max="10" step="0.01" value="0.80">
           </div>
           
           <!-- EUR/USD Input -->
           <div class="input-wrapper">
             <div class="input-row">
-              <label for="eur_usd">EUR/USD <span>(Exchange Rate)</span></label>
-              <input type="number" step="any" class="glass-input" id="eur_usd" name="eur_usd" value="1.08" required>
+              <label for="eur_usd">EUR/USD % Change Today <span>(Exchange Rate)</span></label>
+              <input type="number" step="0.01" class="glass-input" id="eur_usd" name="eur_usd" placeholder="e.g. -0.10" value="0.00" required>
             </div>
-            <input type="range" id="eurusd_slider" min="0.9" max="1.6" step="0.01" value="1.08">
+            <input type="range" id="eurusd_slider" min="-3" max="3" step="0.01" value="0.00">
           </div>
 
         </div>
@@ -310,7 +325,7 @@
     </div>
 
     <!-- Latest Data Chart -->
-    <div class="glass-card" style="animation-delay: 0.25s;">
+    <div class="glass-card" data-aos="fade-up" data-aos-duration="1000">
       <div class="card-header" style="margin-bottom: 20px;">
         <h2>Market Snapshot</h2>
         <span>Dynamic plot of the most recent market metrics</span>
@@ -480,5 +495,28 @@
     });
   </script>
   {% endif %}
+
+  <!-- AOS Library for Scroll Animations -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <script>
+    // Initialize AOS
+    AOS.init({
+      once: false, // animate every time you scroll up/down
+      mirror: true // animate out while scrolling past
+    });
+
+    // Parallax effect for background orbs
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const orb1 = document.querySelector('.orb1');
+      const orb2 = document.querySelector('.orb2');
+      const orb3 = document.querySelector('.orb3');
+      
+      if(orb1) orb1.style.transform = `translateY(${scrollY * 0.3}px)`;
+      if(orb2) orb2.style.transform = `translateY(${scrollY * -0.2}px)`;
+      if(orb3) orb3.style.transform = `translateY(${scrollY * 0.1}px)`;
+    });
+  </script>
 </body>
 </html>

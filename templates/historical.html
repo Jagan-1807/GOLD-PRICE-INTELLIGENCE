@@ -5,6 +5,8 @@
   <title>Aura: Historical Data</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- AOS CSS for Scroll Effects -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <style>
     :root {
       --bg-color: #0b0c10;
@@ -93,7 +95,7 @@
       align-items: center;
       position: relative;
       z-index: 1;
-      animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1);
+      /* removed fadeUp animation so AOS handles it */
     }
 
     /* Glassmorphism Card */
@@ -107,6 +109,11 @@
       width: 100%;
       box-shadow: 0 15px 35px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       margin-bottom: 50px;
+      transition: box-shadow 0.4s ease, transform 0.4s ease;
+    }
+    .glass-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 30px rgba(102, 252, 241, 0.15);
     }
     
     .card-header {
@@ -219,7 +226,7 @@
   </nav>
 
   <div class="container">
-    <div class="glass-card">
+    <div class="glass-card" data-aos="fade-up" data-aos-duration="1000">
       <div class="card-header">
         <div>
           <h2>Full Historical Dataset</h2>
@@ -250,5 +257,20 @@
     </div>
   </div>
 
+  <!-- AOS Library for Scroll Animations -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <script>
+    AOS.init({ once: false, mirror: true });
+
+    // Parallax effect for background orbs
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const orb1 = document.querySelector('.orb1');
+      const orb2 = document.querySelector('.orb2');
+      if(orb1) orb1.style.transform = `translateY(${scrollY * 0.3}px)`;
+      if(orb2) orb2.style.transform = `translateY(${scrollY * -0.2}px)`;
+    });
+  </script>
 </body>
 </html>

@@ -5,6 +5,8 @@
   <title>Aura: Prediction Result</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- AOS CSS for Scroll Effects -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <style>
     :root {
       --bg-color: #0b0c10;
@@ -78,13 +80,12 @@
       border-radius: 24px;
       padding: 60px 50px;
       text-align: center;
-      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      /* removed fadeUp animation so AOS handles it */
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      transform-style: preserve-3d;
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      transition: box-shadow 0.4s ease, transform 0.4s ease;
     }
     .glass-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-2px);
       box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 25px rgba(102, 252, 241, 0.1);
     }
 
@@ -126,7 +127,7 @@
       gap: 20px;
       margin: 40px 0 50px 0;
       flex-wrap: wrap;
-      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+      /* removed fadeUp animation */
     }
     .input-pill {
       background: rgba(0,0,0,0.4);
@@ -157,7 +158,7 @@
       letter-spacing: 2px;
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       box-shadow: 0 0 20px rgba(102, 252, 241, 0.4);
-      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+      /* removed fadeUp animation */
     }
     .btn-glow:hover {
       box-shadow: 0 0 35px rgba(102, 252, 241, 0.8);
@@ -188,12 +189,15 @@
   <nav><a href="/" class="logo">Aura</a></nav>
 
   <div class="container">
-    <div class="glass-card">
+    <div class="glass-card" data-aos="zoom-in" data-aos-duration="1000">
       <div class="subtitle">Estimated Gold Price (GLD)</div>
       
       <div class="price-display">
         <span>$</span>{{ prediction }}
       </div>
+      <p style="color: var(--accent-color); font-size: 1.2rem; margin-bottom: 20px; font-weight: 600;">
+        Predicted change: {{ predicted_return_pct }}%
+      </p>
 
       <p class="info-text">Market forecast generated based on the latest indicators</p>
 
@@ -208,5 +212,18 @@
     </div>
   </div>
 
+  <!-- AOS Library for Scroll Animations -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <script>
+    AOS.init({ once: false, mirror: true });
+
+    // Parallax effect for background orb
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const orb1 = document.querySelector('.orb1');
+      if(orb1) orb1.style.transform = `translateY(${scrollY * 0.3}px) scale(${1 + scrollY * 0.001})`;
+    });
+  </script>
 </body>
 </html>

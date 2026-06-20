@@ -4,6 +4,7 @@ import pickle
 import numpy as np
 from sklearn.exceptions import InconsistentVersionWarning
 import warnings
+import os
 
 # Suppress scikit-learn version mismatch warnings
 warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
@@ -23,8 +24,8 @@ try:
     with open('gold_price_scaler.pkl', 'rb') as f:
         scaler = pickle.load(f)
         
-    # Get feature names for the form
-    features = ['SPX', 'USO', 'SLV', 'EUR/USD']
+    # Model is trained on same-day % returns of these assets, not raw price levels
+    features = ['SPX_return', 'USO_return', 'SLV_return', 'EUR/USD_return']
     
 except Exception as e:
     print(f"Error loading files: {e}")
@@ -51,29 +52,37 @@ def predict():
         return "Model not loaded properly", 500
     
     try:
-        # Get input values from form
-        input_data = {
-            'SPX': float(request.form['spx']),
-            'USO': float(request.form['uso']),
-            'SLV': float(request.form['slv']),
-            'EUR/USD': float(request.form['eur_usd'])
-        }
+        # Validate and get input values from form
+        try:
+            # Form fields now represent % change (e.g. user enters "1.2" for +1.2%)
+            input_data = {
+                'SPX': float(request.form.get('spx', '')),
+                'USO': float(request.form.get('uso', '')),
+                'SLV': float(request.form.get('slv', '')),
+                'EUR/USD': float(request.form.get('eur_usd', ''))
+            }
+        except ValueError:
+            return "Invalid input: Please ensure all fields are filled with valid numbers.", 400
         
-        # Prepare features in correct order
-        feature_values = [input_data[feature] for feature in features]
+        # Convert entered percentages (e.g. 1.2) to decimal returns (0.012)
+        # to match the pct_change() convention used in training
+        feature_values = [input_data[k] / 100 for k in ['SPX', 'USO', 'SLV', 'EUR/USD']]
         
         # Scale features
         features_scaled = scaler.transform([feature_values])
         
-        # Make prediction
-        prediction = model.predict(features_scaled)[0]
+        # Make prediction (predicts return)
+        predicted_return = model.predict(features_scaled)[0]
+        last_known_gld = df['GLD'].iloc[-1]
+        predicted_price = last_known_gld * (1 + predicted_return)
         
         return render_template('prediction.html',
-                            prediction=round(prediction, 2),
+                            prediction=round(predicted_price, 2),
+                            predicted_return_pct=round(predicted_return * 100, 3),
                             input_data=input_data)
     
     except Exception as e:
-        return f"Error making prediction: {str(e)}", 400
+        return f"An unexpected error occurred: {str(e)}", 400
 
 @app.route('/historical')
 def show_historical():
@@ -86,4 +95,5 @@ def show_historical():
     return "Historical data not available", 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    debug_mode = os.environ.get("FLASK_DEBUG", "0") == "1"
+    app.run(debug=debug_mode, host='0.0.0.0', port=5000)
