@@ -111,7 +111,6 @@
       padding: 40px; width: 100%;
       box-shadow: 0 15px 35px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       margin-bottom: 40px; 
-      /* removed scaleUp animation here so AOS handles it instead */
       transition: box-shadow 0.4s ease, transform 0.4s ease;
     }
     .glass-card:hover {
@@ -396,19 +395,13 @@
     // ----------------------------------------
     // CHART.JS INTEGRATION
     // ----------------------------------------
-    // Fetching the securely injected data payload and extracting it for Chart.js
     const rawData = JSON.parse(document.getElementById('chart-data').textContent);
-    
-    // We assume the data is chronologically ordered but we reverse it if it was tail() so that left-to-right is chronological. 
-    // Wait, df.tail() already returns them ordered chronological (oldest to newest). Let's use as is.
     const labels = rawData.map(row => row['Date'] || '');
     const gldData = rawData.map(row => row['GLD']);
     const spxData = rawData.map(row => row['SPX']);
     
-    // Create Chart
     const ctx = document.getElementById('marketChart').getContext('2d');
     
-    // We will plot GLD on one axis, and SPX on another since SPX is much larger value.
     const marketChart = new Chart(ctx, {
       type: 'line',
       data: {
@@ -417,7 +410,7 @@
           {
             label: 'Gold (GLD)',
             data: gldData,
-            borderColor: '#fbbf24', // golden color
+            borderColor: '#fbbf24',
             backgroundColor: 'rgba(251, 191, 36, 0.1)',
             borderWidth: 3,
             tension: 0.4,
@@ -432,7 +425,7 @@
           {
             label: 'S&P 500 (SPX)',
             data: spxData,
-            borderColor: '#66fcf1', // theme cyan
+            borderColor: '#66fcf1',
             backgroundColor: 'transparent',
             borderWidth: 2,
             borderDash: [5, 5],
@@ -483,7 +476,7 @@
             display: true,
             position: 'right',
             title: { display: true, text: 'SPX Index', color: '#66fcf1', font: { family: 'Outfit' } },
-            grid: { drawOnChartArea: false }, // Only draw grid lines for the first axis
+            grid: { drawOnChartArea: false },
             ticks: { color: '#66fcf1', font: { family: 'Outfit' } }
           }
         },
@@ -502,8 +495,8 @@
   <script>
     // Initialize AOS
     AOS.init({
-      once: false, // animate every time you scroll up/down
-      mirror: true // animate out while scrolling past
+      once: false,
+      mirror: true
     });
 
     // Parallax effect for background orbs

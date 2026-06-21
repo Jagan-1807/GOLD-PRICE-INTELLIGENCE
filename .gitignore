@@ -1,3 +1,18 @@
+# Python
 __pycache__/
+*.py[cod]
+*.pyo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model artifacts (regenerate locally via update_model.py)
 *.pkl
+
+# Environment
 .env
+*.env
+
+# OS
+.DS_Store
+Thumbs.db
